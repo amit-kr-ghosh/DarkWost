@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import DynamicCards from "./DynamicCards";
 import { products } from "../data/products";
 import { ContainerScroll } from "../components/ui/container-scroll-animation.tsx";
@@ -20,11 +20,11 @@ const NewArrivals: React.FC = () => {
     };
   }, []);
 
-  // Pick random products based on screen size
-  const randomNewArrivals = useMemo(() => {
-    const shuffled = [...products].sort(() => 0.5 - Math.random());
-    return isSmallScreen ? shuffled.slice(0, 1) : shuffled.slice(0, 2);
-  }, [isSmallScreen]);
+  // Select fixed products with IDs 1 and 11
+  // If small screen, show only product with ID 1
+  const fixedProducts = products.filter((product) =>
+    isSmallScreen ? product.id === 9 : product.id === 2 || product.id === 5
+  );
 
   return (
     <ContainerScroll
@@ -34,7 +34,7 @@ const NewArrivals: React.FC = () => {
         </h2>
       }
     >
-      <section className="py-8">
+      <section  id="new-arrivals" className="py-8">
         <div
           className="
             flex gap-6 justify-center
@@ -42,15 +42,17 @@ const NewArrivals: React.FC = () => {
             px-4 sm:px-0
           "
         >
-          {randomNewArrivals.map((product) => (
+          {fixedProducts.map((product) => (
             <div
               key={product.id}
-              className="flex-shrink-0 w-[85%] max-w-sm sm:w-72"
+              className="flex-shrink-0 w-[90vw] max-w-sm sm:w-72"
             >
               <DynamicCards product={product} />
             </div>
           ))}
         </div>
+   
+
       </section>
     </ContainerScroll>
   );

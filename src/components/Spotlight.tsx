@@ -1,139 +1,255 @@
-import React from 'react';
-import { ExternalLink, Instagram, Star } from 'lucide-react';
-import GradientWrapper from './GradientWrapper';
+import React, { useState, useRef, useEffect } from "react";
+import {
+  ExternalLink,
+  Instagram,
+  Star,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import GradientWrapper from "./GradientWrapper";
+import { motion } from "framer-motion";
+import LightRays from "../components/LightRays/LightRays";
 
 const styleIcons = [
   {
     id: 1,
     name: "Sofia Chen",
     role: "Fashion Stylist",
-    description: "Minimalist aesthetics meet maximum impact. Sofia's choices redefine modern elegance.",
-    image: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description:
+      "Minimalist aesthetics meet maximum impact. Sofia's choices redefine modern elegance.",
+    image:
+      "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400",
     productName: "Urban Minimalist",
     amazonUrl: "https://amazon.com/dp/example6",
     followers: "125K",
-    gradient: "from-pink-500 to-rose-500"
+    gradient: "from-pink-500 to-rose-500",
   },
   {
     id: 2,
     name: "Marcus Rivera",
     role: "Creative Director",
-    description: "Bold choices for bold personalities. Marcus pushes boundaries in eyewear fashion.",
-    image: "https://images.pexels.com/photos/1499327/pexels-photo-1499327.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description:
+      "Bold choices for bold personalities. Marcus pushes boundaries in eyewear fashion.",
+    image:
+      "https://images.pexels.com/photos/1499327/pexels-photo-1499327.jpeg?auto=compress&cs=tinysrgb&w=400",
     productName: "Midnight Aviator",
     amazonUrl: "https://amazon.com/dp/example2",
     followers: "89K",
-    gradient: "from-blue-500 to-indigo-500"
+    gradient: "from-blue-500 to-indigo-500",
   },
   {
     id: 3,
     name: "Luna Martinez",
     role: "Lifestyle Blogger",
-    description: "Vibrant colors and playful designs that capture the joy of self-expression and confidence.",
-    image: "https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description:
+      "Vibrant colors and playful designs that capture the joy of self-expression and confidence.",
+    image:
+      "https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=400",
     productName: "Coral Reef",
     amazonUrl: "https://amazon.com/dp/example3",
     followers: "156K",
-    gradient: "from-orange-500 to-pink-500"
+    gradient: "from-orange-500 to-pink-500",
   },
   {
     id: 4,
     name: "Alex Thompson",
     role: "Tech Influencer",
-    description: "Where technology meets style. Alex showcases the perfect blend of function and fashion.",
-    image: "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=400",
+    description:
+      "Where technology meets style. Alex showcases the perfect blend of function and fashion.",
+    image:
+      "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=400",
     productName: "Tech Master Pro",
     amazonUrl: "https://amazon.com/dp/example4",
     followers: "203K",
-    gradient: "from-purple-500 to-blue-500"
-  }
+    gradient: "from-purple-500 to-blue-500",
+  },
 ];
 
-// Gradient string for the wrapper around all cards
-const wrapperGradient =
-  'linear-gradient(180deg, #efaf19ff 0%, rgba(154, 190, 38, 0.98) 0.01%, rgba(167, 34, 56, 0.2) 100%)';
+const wrapperGradient = "linear-gradient(180deg, #000000 0%, #000000 100%)";
 
 const Spotlight: React.FC = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const total = styleIcons.length;
+
+  useEffect(() => {
+    const checkScreen = () => setIsSmallScreen(window.innerWidth < 640); // sm breakpoint
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
+    return () => window.removeEventListener("resize", checkScreen);
+  }, []);
+
+  const prevSlide = () =>
+    setCurrentIndex((prev) => (prev === 0 ? total - 1 : prev - 1));
+  const nextSlide = () =>
+    setCurrentIndex((prev) => (prev === total - 1 ? 0 : prev + 1));
+
+  const getCardStyle = (index: number) => {
+    const pos = index - currentIndex;
+    if (pos === 0)
+      return {
+        opacity: 1,
+        scale: 1,
+        x: 0,
+        rotateY: 0,
+        zIndex: 30,
+        pointerEvents: "auto",
+      };
+    if (pos === -1 || (pos === total - 1 && currentIndex === 0))
+      return {
+        opacity: 0.6,
+        scale: 0.8,
+        x: -150,
+        rotateY: 45,
+        zIndex: 10,
+        pointerEvents: "none",
+      };
+    if (pos === 1 || (pos === -(total - 1) && currentIndex === total - 1))
+      return {
+        opacity: 0.6,
+        scale: 0.8,
+        x: 150,
+        rotateY: -45,
+        zIndex: 10,
+        pointerEvents: "none",
+      };
+    return {
+      opacity: 0,
+      scale: 0.5,
+      x: 0,
+      rotateY: 0,
+      zIndex: 0,
+      pointerEvents: "none",
+    };
+  };
+
   return (
-    <section className="px-20 py-20 bg-black">
-      <div className="container mx-auto px-6">
+    <section  id="spotlight" className="relative px-6 md:px-20 py-20 bg-black select-none overflow-hidden">
+      {/* Light rays background */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <LightRays
+          raysOrigin="top-center"
+          raysColor="#ffffffff"
+          raysSpeed={isSmallScreen ? 2 : 1.9}
+          lightSpread={isSmallScreen ? 0.8 : 0.5}
+          rayLength={isSmallScreen ? 5 : 3}
+          followMouse={true}
+          mouseInfluence={isSmallScreen ? 0.05 : 0.1}
+          noiseAmount={isSmallScreen ? 0.7 : 0.5}
+          distortion={isSmallScreen ? 0.08 : 0.05}
+          className="w-full h-full mix-blend-screen opacity-100"
+        />
+      </div>
+
+      {/* Foreground content */}
+      <div className="relative z-10 container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-6xl font-bold text-gray-100 mb-4">
-            Spotlight : Icons in Dark Wost
+          <h2 className="text-5xl md:text-7xl font-bold text-white mb-4">
+            Spotlight
+            <br />
+            <div className="text-4xl md:text-6xl font-bold text-white mb-4">
+              Icons in Dark Wost
+            </div>
           </h2>
-          <br />
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Meet the style mavens and creative minds who make Dark Wost their signature choice. 
-            Discover how they express their unique vision through our eyewear.
-          </p>
         </div>
 
         <GradientWrapper
           gradient={wrapperGradient}
-          wrapperClassName="rounded-3xl w-full p-10"
+          wrapperClassName="rounded-3xl w-full p-10 relative"
           className="relative"
         >
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {styleIcons.map((icon) => (
-              <div
-                key={icon.id}
-                className="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 overflow-hidden group"
-              >
-                {/* Profile Image */}
-                <div className="relative overflow-hidden rounded-t-3xl">
-                  <img
-                    src={icon.image}
-                    alt={icon.name}
-                    className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-t-3xl"></div>
-                  
-                  {/* Social Stats */}
-                  <div className="absolute top-4 right-4 flex items-center space-x-1 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
-                    <Instagram className="w-4 h-4 text-pink-500" />
-                    <span className="text-sm font-medium text-gray-700">{icon.followers}</span>
-                  </div>
+          <div className="relative flex items-center justify-center overflow-visible">
+            <button
+              onClick={prevSlide}
+              aria-label="Previous"
+              className="absolute left-2 md:left-5 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-white/10 hover:bg-white/20 transition"
+            >
+              <ChevronLeft className="w-6 h-6 text-white" />
+            </button>
 
-                  {/* Gradient Overlay */}
-                 
-                </div>
-
-                {/* Content */}
-                <div className="p-6 space-y-4">
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-800 group-hover:text-gray-900 transition-colors">
-                      {icon.name}
-                    </h3>
-                    <p className="text-sm text-gray-500 font-medium">{icon.role}</p>
-                  </div>
-
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    {icon.description}
-                  </p>
-
-                  {/* Product & Rating */}
-                  <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-                    <div>
-                      <p className="text-sm font-medium text-gray-700">Wearing:</p>
-                      <p className="text-sm text-indigo-600 font-semibold">{icon.productName}</p>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                      <span className="text-sm font-medium text-gray-700">5.0</span>
-                    </div>
-                  </div>
-
-                  {/* CTA Button */}
-                  <button
-                    onClick={() => window.open(icon.amazonUrl, '_blank')}
-                    className={`w-full py-3 bg-gradient-to-r ${icon.gradient} text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center justify-center space-x-2`}
+            <motion.div
+              ref={containerRef}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={(event, info) => {
+                if (info.offset.x < -50) nextSlide();
+                else if (info.offset.x > 50) prevSlide();
+              }}
+              className="flex relative w-full max-w-5xl h-[450px] justify-center items-center overflow-visible"
+            >
+              {styleIcons.map((icon, i) => {
+                const style = getCardStyle(i);
+                return (
+                  <motion.div
+                    key={icon.id}
+                    initial={false}
+                    animate={style}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    className="absolute w-72 md:w-80 lg:w-96 rounded-3xl bg-neutral-900 shadow-lg shadow-black/50 cursor-pointer overflow-hidden border border-neutral-700"
+                    onClick={() => setCurrentIndex(i)}
+                    style={{ perspective: 1200, zIndex: style.zIndex }}
                   >
-                    <span>Shop This Look</span>
-                    <ExternalLink className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            ))}
+                    <div className="relative overflow-hidden rounded-t-3xl h-64">
+                      <img
+                        src={icon.image}
+                        alt={icon.name}
+                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                      <div className="absolute top-4 right-4 flex items-center space-x-1 bg-black/70 backdrop-blur-sm px-3 py-1 rounded-full">
+                        <Instagram className="w-4 h-4 text-pink-500" />
+                        <span className="text-sm font-medium text-white">
+                          {icon.followers}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="p-6 space-y-4">
+                      <div>
+                        <h3 className="text-xl font-bold text-white">
+                          {icon.name}
+                        </h3>
+                        <p className="text-sm text-gray-400">{icon.role}</p>
+                      </div>
+                      <p className="text-gray-300 text-sm leading-relaxed">
+                        {icon.description}
+                      </p>
+
+                      <div className="flex items-center justify-between pt-2 border-t border-neutral-700">
+                        <div>
+                          <p className="text-sm text-gray-400">Wearing:</p>
+                          <p className="text-sm text-indigo-400 font-semibold">
+                            {icon.productName}
+                          </p>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                          <span className="text-sm text-white">5.0</span>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => window.open(icon.amazonUrl, "_blank")}
+                        className={`w-full py-3 bg-gradient-to-r ${icon.gradient} text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center justify-center space-x-2`}
+                      >
+                        <span>Shop This Look</span>
+                        <ExternalLink className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+
+            <button
+              onClick={nextSlide}
+              aria-label="Next"
+              className="absolute right-2 md:right-5 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-white/10 hover:bg-white/20 transition"
+            >
+              <ChevronRight className="w-6 h-6 text-white" />
+            </button>
           </div>
         </GradientWrapper>
       </div>

@@ -50,7 +50,7 @@ const Hero: React.FC = () => {
   if (!currentProduct) return null;
 
   return (
-    <section className="relative min-h-screen pb-[14rem] bg-[#0C0C0F] overflow-hidden text-white">
+    <section id="hero" className="relative min-h-screen pb-[14rem] bg-[#0C0C0F] overflow-hidden text-white">
       <div className="relative z-10 container mx-auto px-4 sm:px-6 md:px-12 lg:px-24 py-12 sm:py-16 lg:py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 lg:gap-12 items-center min-h-[80vh]">
           {/* Left Content */}
@@ -70,9 +70,18 @@ const Hero: React.FC = () => {
               </div>
 
               <h1
-                className="text-4xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl playfair-display-new font-extrabold tracking-wide text-transparent bg-clip-text leading-tight"
+                className={`
+                  text-4xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl
+                  playfair-display-new font-extrabold tracking-wide
+                  leading-tight
+                  ${
+                    // On md and above: gradient text, on smaller: solid white
+                    "text-white md:text-transparent bg-clip-text md:bg-clip-text"
+                  }
+                `}
                 style={{
-                  backgroundImage: "linear-gradient(90deg, #7C3AED, #a5c7f7ff)",
+                  backgroundImage:
+                    "linear-gradient(90deg, #7C3AED, #a5c7f7ff)",
                 }}
               >
                 Dark Wost
