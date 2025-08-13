@@ -181,7 +181,7 @@ const Hero: React.FC = () => {
                   style={{ perspective: "1000px" }}
                 >
                   <motion.img
-                    src={currentProduct.image}
+                    src={currentProduct.imagePng}
                     alt={currentProduct.name}
                     className="w-48 sm:w-64 h-36 sm:h-44 object-contain"
                     initial={{ y: 30, opacity: 0 }}

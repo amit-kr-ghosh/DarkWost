@@ -74,7 +74,7 @@ const Spotlight: React.FC = () => {
   const total = styleIcons.length;
 
   useEffect(() => {
-    const checkScreen = () => setIsSmallScreen(window.innerWidth < 640); // sm breakpoint
+    const checkScreen = () => setIsSmallScreen(window.innerWidth < 640);
     checkScreen();
     window.addEventListener("resize", checkScreen);
     return () => window.removeEventListener("resize", checkScreen);
@@ -125,7 +125,10 @@ const Spotlight: React.FC = () => {
   };
 
   return (
-    <section  id="spotlight" className="relative px-6 md:px-20 py-20 bg-black select-none overflow-hidden">
+    <section
+      id="spotlight"
+      className="relative px-6 md:px-20 py-20 bg-black select-none overflow-hidden"
+    >
       {/* Light rays background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <LightRays
@@ -160,22 +163,38 @@ const Spotlight: React.FC = () => {
           className="relative"
         >
           <div className="relative flex items-center justify-center overflow-visible">
-            <button
-              onClick={prevSlide}
-              aria-label="Previous"
-              className="absolute left-2 md:left-5 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-white/10 hover:bg-white/20 transition"
-            >
-              <ChevronLeft className="w-6 h-6 text-white" />
-            </button>
+            {/* Prev button */}
+            {!isSmallScreen && (
+              <button
+                onClick={prevSlide}
+                aria-label="Previous"
+                className="absolute left-2 md:left-5 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-white/10 hover:bg-white/20 transition"
+              >
+                <ChevronLeft className="w-6 h-6 text-white" />
+              </button>
+            )}
 
+            {/* Carousel */}
             <motion.div
               ref={containerRef}
               drag="x"
               dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.2}
+              dragElastic={isSmallScreen ? 0.4 : 0.2} // smoother on mobile
               onDragEnd={(event, info) => {
-                if (info.offset.x < -50) nextSlide();
-                else if (info.offset.x > 50) prevSlide();
+                const swipeThreshold = 50;
+                const velocityThreshold = 500;
+
+                if (
+                  info.velocity.x < -velocityThreshold ||
+                  info.offset.x < -swipeThreshold
+                ) {
+                  nextSlide();
+                } else if (
+                  info.velocity.x > velocityThreshold ||
+                  info.offset.x > swipeThreshold
+                ) {
+                  prevSlide();
+                }
               }}
               className="flex relative w-full max-w-5xl h-[450px] justify-center items-center overflow-visible"
             >
@@ -186,7 +205,11 @@ const Spotlight: React.FC = () => {
                     key={icon.id}
                     initial={false}
                     animate={style}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: isSmallScreen ? 200 : 300,
+                      damping: isSmallScreen ? 25 : 30,
+                    }}
                     className="absolute w-72 md:w-80 lg:w-96 rounded-3xl bg-neutral-900 shadow-lg shadow-black/50 cursor-pointer overflow-hidden border border-neutral-700"
                     onClick={() => setCurrentIndex(i)}
                     style={{ perspective: 1200, zIndex: style.zIndex }}
@@ -243,13 +266,16 @@ const Spotlight: React.FC = () => {
               })}
             </motion.div>
 
-            <button
-              onClick={nextSlide}
-              aria-label="Next"
-              className="absolute right-2 md:right-5 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-white/10 hover:bg-white/20 transition"
-            >
-              <ChevronRight className="w-6 h-6 text-white" />
-            </button>
+            {/* Next button */}
+            {!isSmallScreen && (
+              <button
+                onClick={nextSlide}
+                aria-label="Next"
+                className="absolute right-2 md:right-5 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-white/10 hover:bg-white/20 transition"
+              >
+                <ChevronRight className="w-6 h-6 text-white" />
+              </button>
+            )}
           </div>
         </GradientWrapper>
       </div>
