@@ -23,7 +23,7 @@ const NewArrivals: React.FC = () => {
   // Select fixed products with IDs 1 and 11
   // If small screen, show only product with ID 1
   const fixedProducts = products.filter((product) =>
-    isSmallScreen ? product.id === 3 : product.id === 6 || product.id === 8
+    isSmallScreen ? product.id === 2 : product.id === 6 || product.id === 8
   );
 
   return (

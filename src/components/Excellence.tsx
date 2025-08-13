@@ -24,7 +24,6 @@ const excellenceFeatures = [
     description:
       "Advanced filtering technology that reduces digital eye strain and improves sleep quality.",
     color: "from-blue-400 to-indigo-600",
-    bgColor: "bg-gradient-to-br from-blue-400 to-indigo-600",
   },
   {
     icon: Sun,
@@ -32,7 +31,6 @@ const excellenceFeatures = [
     description:
       "Perfect vision meets UV protection. Custom lenses that adapt to your lifestyle.",
     color: "from-yellow-400 to-orange-500",
-    bgColor: "bg-gradient-to-br from-yellow-400 to-orange-500",
   },
   {
     icon: Eye,
@@ -40,7 +38,6 @@ const excellenceFeatures = [
     description:
       "Seamless vision at all distances. Say goodbye to switching between multiple pairs.",
     color: "from-green-400 to-emerald-600",
-    bgColor: "bg-gradient-to-br from-green-400 to-emerald-600",
   },
   {
     icon: Zap,
@@ -48,7 +45,6 @@ const excellenceFeatures = [
     description:
       "Crystal clear vision in any lighting condition. Reduce reflections and enhance clarity.",
     color: "from-purple-400 to-pink-500",
-    bgColor: "bg-gradient-to-br from-purple-400 to-pink-500",
   },
   {
     icon: Droplets,
@@ -56,7 +52,6 @@ const excellenceFeatures = [
     description:
       "Water-resistant lenses that repel moisture and make cleaning effortless.",
     color: "from-teal-400 to-cyan-600",
-    bgColor: "bg-gradient-to-br from-teal-400 to-cyan-600",
   },
   {
     icon: Users,
@@ -64,17 +59,16 @@ const excellenceFeatures = [
     description:
       "Personalized measurements ensure perfect comfort and optimal visual performance.",
     color: "from-rose-400 to-red-600",
-    bgColor: "bg-gradient-to-br from-rose-400 to-red-600",
   },
 ];
 
 const directions = [
   { x: -200, y: 0 },
   { x: 200, y: 0 },
-  { x: 0, y: 200 },
-  { x: -200, y: 0 },
+  { x: -200, y: 0},
   { x: 200, y: 0 },
   { x: -200, y: 0 },
+  { x: 200, y: 0 },
 ];
 
 interface ScrollVelocityTextProps {
@@ -97,9 +91,7 @@ function useElementWidth(ref: React.RefObject<HTMLElement>) {
 
   useLayoutEffect(() => {
     function updateWidth() {
-      if (ref.current) {
-        setWidth(ref.current.offsetWidth);
-      }
+      if (ref.current) setWidth(ref.current.offsetWidth);
     }
     updateWidth();
     window.addEventListener("resize", updateWidth);
@@ -202,8 +194,8 @@ const ScrollVelocityText: React.FC<ScrollVelocityTextProps> = ({
 const Excellence: React.FC = () => {
   const [activeCard, setActiveCard] = useState<number | null>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+
   useEffect(() => {
     const checkScreenSize = () => setIsSmallScreen(window.innerWidth < 900);
     checkScreenSize();
@@ -260,7 +252,7 @@ const Excellence: React.FC = () => {
 
   return (
     <section id="excellence" className="px-4 sm:px-8 lg:px-20 py-16 bg-white">
-      {/* Scroll velocity heading */}
+      {/* Scrolling heading */}
       <div
         style={{
           width: "100vw",
@@ -301,9 +293,16 @@ const Excellence: React.FC = () => {
           make.
         </p>
 
-        {/* Small screen: horizontal scroll */}
+        {/* Small screen horizontal scroll with fix */}
         {isSmallScreen && (
-          <div className="overflow-x-auto snap-x snap-mandatory -mx-4 px-4 pb-4 touch-pan-x">
+          <div
+            className="overflow-x-auto snap-x snap-mandatory -mx-4 px-4 pb-4"
+            style={{
+              overscrollBehaviorX: "contain",
+              WebkitOverflowScrolling: "touch",
+              touchAction: "pan-y",
+            }}
+          >
             <div className="flex gap-4">
               {excellenceFeatures.map((feature, index) => {
                 const IconComponent = feature.icon;
@@ -328,23 +327,23 @@ const Excellence: React.FC = () => {
                     onTouchStart={() => setActiveCard(index)}
                   >
                     <div
-                      className={`inline-flex p-3 rounded-2xl mb-5 transition-transform duration-300 bg-gradient-to-br ${
-                        feature.color
-                      } ${isActive ? "scale-110" : ""}`}
+                      className={`inline-flex p-3 rounded-2xl mb-5 transition-transform duration-300 bg-gradient-to-br ${feature.color} ${
+                        isActive ? "scale-110" : ""
+                      }`}
                     >
                       <IconComponent className="w-7 h-7 text-white" />
                     </div>
-                    <h3 className={`text-lg font-bold text-black mb-3`}>
+                    <h3 className="text-lg font-bold text-black mb-3">
                       {feature.title}
                     </h3>
-                    <p className={`text-sm text-gray-700`}>
+                    <p className="text-sm text-gray-700">
                       {feature.description}
                     </p>
                     <div className="mt-5">
                       <div
-                        className={`h-1 transition-all duration-500 rounded-full bg-gradient-to-r ${
-                          feature.color
-                        } ${isActive ? "w-full" : "w-0"}`}
+                        className={`h-1 transition-all duration-500 rounded-full bg-gradient-to-r ${feature.color} ${
+                          isActive ? "w-full" : "w-0"
+                        }`}
                       />
                     </div>
                   </motion.div>
@@ -354,7 +353,7 @@ const Excellence: React.FC = () => {
           </div>
         )}
 
-        {/* Large screen: vertical cards */}
+        {/* Large screen vertical cards */}
         {!isSmallScreen && (
           <div className="flex flex-col gap-8">
             {excellenceFeatures.map((feature, index) => {
@@ -381,23 +380,23 @@ const Excellence: React.FC = () => {
                   onTouchStart={() => setActiveCard(index)}
                 >
                   <div
-                    className={`inline-flex p-4 rounded-2xl mb-6 transition-transform duration-300 bg-gradient-to-br ${
-                      feature.color
-                    } ${isActive ? "scale-110" : ""}`}
+                    className={`inline-flex p-4 rounded-2xl mb-6 transition-transform duration-300 bg-gradient-to-br ${feature.color} ${
+                      isActive ? "scale-110" : ""
+                    }`}
                   >
                     <IconComponent className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className={`text-xl font-bold text-black mb-4`}>
+                  <h3 className="text-xl font-bold text-black mb-4">
                     {feature.title}
                   </h3>
-                  <p className={`text-gray-700 leading-relaxed`}>
+                  <p className="text-gray-700 leading-relaxed">
                     {feature.description}
                   </p>
                   <div className="mt-6">
                     <div
-                      className={`h-1 transition-all duration-500 rounded-full bg-gradient-to-r ${
-                        feature.color
-                      } ${isActive ? "w-full" : "w-0"}`}
+                      className={`h-1 transition-all duration-500 rounded-full bg-gradient-to-r ${feature.color} ${
+                        isActive ? "w-full" : "w-0"
+                      }`}
                     />
                   </div>
                 </motion.div>

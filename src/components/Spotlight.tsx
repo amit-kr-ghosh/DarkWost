@@ -82,6 +82,7 @@ const Spotlight: React.FC = () => {
 
   const prevSlide = () =>
     setCurrentIndex((prev) => (prev === 0 ? total - 1 : prev - 1));
+
   const nextSlide = () =>
     setCurrentIndex((prev) => (prev === total - 1 ? 0 : prev + 1));
 
@@ -129,21 +130,23 @@ const Spotlight: React.FC = () => {
       id="spotlight"
       className="relative px-6 md:px-20 py-20 bg-black select-none overflow-hidden"
     >
-      {/* Light rays background */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <LightRays
-          raysOrigin="top-center"
-          raysColor="#ffffffff"
-          raysSpeed={isSmallScreen ? 2 : 1.9}
-          lightSpread={isSmallScreen ? 0.8 : 0.5}
-          rayLength={isSmallScreen ? 5 : 3}
-          followMouse={true}
-          mouseInfluence={isSmallScreen ? 0.05 : 0.1}
-          noiseAmount={isSmallScreen ? 0.7 : 0.5}
-          distortion={isSmallScreen ? 0.08 : 0.05}
-          className="w-full h-full mix-blend-screen opacity-100"
-        />
-      </div>
+      {/* Light rays background - disabled on small screens */}
+      {!isSmallScreen && (
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <LightRays
+            raysOrigin="top-center"
+            raysColor="#ffffffff"
+            raysSpeed={1.9}
+            lightSpread={0.5}
+            rayLength={3}
+            followMouse={true}
+            mouseInfluence={0.1}
+            noiseAmount={0.5}
+            distortion={0.05}
+            className="w-full h-full mix-blend-screen opacity-100"
+          />
+        </div>
+      )}
 
       {/* Foreground content */}
       <div className="relative z-10 container mx-auto px-6">
@@ -164,22 +167,26 @@ const Spotlight: React.FC = () => {
         >
           <div className="relative flex items-center justify-center overflow-visible">
             {/* Prev button */}
-            {!isSmallScreen && (
-              <button
-                onClick={prevSlide}
-                aria-label="Previous"
-                className="absolute left-2 md:left-5 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-white/10 hover:bg-white/20 transition"
-              >
-                <ChevronLeft className="w-6 h-6 text-white" />
-              </button>
-            )}
+            <button
+              onClick={prevSlide}
+              aria-label="Previous"
+              className={`absolute top-1/2 -translate-y-1/2 z-40 rounded-full bg-white/10 hover:bg-white/20 transition ${
+                isSmallScreen ? "p-2 opacity-70 left-1" : "p-3 left-2 md:left-5"
+              }`}
+            >
+              <ChevronLeft
+                className={`text-white ${
+                  isSmallScreen ? "w-5 h-5" : "w-6 h-6"
+                }`}
+              />
+            </button>
 
             {/* Carousel */}
             <motion.div
               ref={containerRef}
               drag="x"
               dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={isSmallScreen ? 0.4 : 0.2} // smoother on mobile
+              dragElastic={isSmallScreen ? 0.4 : 0.2}
               onDragEnd={(event, info) => {
                 const swipeThreshold = 50;
                 const velocityThreshold = 500;
@@ -267,15 +274,21 @@ const Spotlight: React.FC = () => {
             </motion.div>
 
             {/* Next button */}
-            {!isSmallScreen && (
-              <button
-                onClick={nextSlide}
-                aria-label="Next"
-                className="absolute right-2 md:right-5 top-1/2 -translate-y-1/2 z-40 p-3 rounded-full bg-white/10 hover:bg-white/20 transition"
-              >
-                <ChevronRight className="w-6 h-6 text-white" />
-              </button>
-            )}
+            <button
+              onClick={nextSlide}
+              aria-label="Next"
+              className={`absolute top-1/2 -translate-y-1/2 z-40 rounded-full bg-white/10 hover:bg-white/20 transition ${
+                isSmallScreen
+                  ? "p-2 opacity-70 right-1"
+                  : "p-3 right-2 md:right-5"
+              }`}
+            >
+              <ChevronRight
+                className={`text-white ${
+                  isSmallScreen ? "w-5 h-5" : "w-6 h-6"
+                }`}
+              />
+            </button>
           </div>
         </GradientWrapper>
       </div>
