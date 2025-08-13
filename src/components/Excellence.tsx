@@ -5,7 +5,14 @@ import React, {
   useState,
   useEffect,
 } from "react";
-import { Shield, Eye, Sun, Zap, Droplets, Users } from "lucide-react";
+import {
+  Shield,
+  Eye,
+  Sun,
+  Zap,
+  Droplets,
+  Users,
+} from "lucide-react";
 import {
   motion,
   Variants,
@@ -24,6 +31,7 @@ const excellenceFeatures = [
     description:
       "Advanced filtering technology that reduces digital eye strain and improves sleep quality.",
     color: "from-blue-400 to-indigo-600",
+    bgColor: "bg-gradient-to-br from-blue-900 to-indigo-900",
   },
   {
     icon: Sun,
@@ -31,6 +39,7 @@ const excellenceFeatures = [
     description:
       "Perfect vision meets UV protection. Custom lenses that adapt to your lifestyle.",
     color: "from-yellow-400 to-orange-500",
+    bgColor: "bg-gradient-to-br from-yellow-900 to-orange-900",
   },
   {
     icon: Eye,
@@ -38,6 +47,7 @@ const excellenceFeatures = [
     description:
       "Seamless vision at all distances. Say goodbye to switching between multiple pairs.",
     color: "from-green-400 to-emerald-600",
+    bgColor: "bg-gradient-to-br from-green-900 to-emerald-900",
   },
   {
     icon: Zap,
@@ -45,6 +55,7 @@ const excellenceFeatures = [
     description:
       "Crystal clear vision in any lighting condition. Reduce reflections and enhance clarity.",
     color: "from-purple-400 to-pink-500",
+    bgColor: "bg-gradient-to-br from-purple-900 to-pink-900",
   },
   {
     icon: Droplets,
@@ -52,6 +63,7 @@ const excellenceFeatures = [
     description:
       "Water-resistant lenses that repel moisture and make cleaning effortless.",
     color: "from-teal-400 to-cyan-600",
+    bgColor: "bg-gradient-to-br from-teal-900 to-cyan-900",
   },
   {
     icon: Users,
@@ -59,13 +71,14 @@ const excellenceFeatures = [
     description:
       "Personalized measurements ensure perfect comfort and optimal visual performance.",
     color: "from-rose-400 to-red-600",
+    bgColor: "bg-gradient-to-br from-rose-900 to-red-900",
   },
 ];
 
 const directions = [
   { x: -200, y: 0 },
   { x: 200, y: 0 },
-  { x: -200, y: 0},
+  { x: -200, y: 0 },
   { x: 200, y: 0 },
   { x: -200, y: 0 },
   { x: 200, y: 0 },
@@ -91,7 +104,9 @@ function useElementWidth(ref: React.RefObject<HTMLElement>) {
 
   useLayoutEffect(() => {
     function updateWidth() {
-      if (ref.current) setWidth(ref.current.offsetWidth);
+      if (ref.current) {
+        setWidth(ref.current.offsetWidth);
+      }
     }
     updateWidth();
     window.addEventListener("resize", updateWidth);
@@ -169,8 +184,7 @@ const ScrollVelocityText: React.FC<ScrollVelocityTextProps> = ({
         ref={i === 0 ? copyRef : null}
         style={{ whiteSpace: "nowrap" }}
       >
-        {text}
-        &nbsp;
+        {text}&nbsp;
       </span>
     );
   }
@@ -194,8 +208,9 @@ const ScrollVelocityText: React.FC<ScrollVelocityTextProps> = ({
 const Excellence: React.FC = () => {
   const [activeCard, setActiveCard] = useState<number | null>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
 
+  // Track if screen is small (<900px now)
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
   useEffect(() => {
     const checkScreenSize = () => setIsSmallScreen(window.innerWidth < 900);
     checkScreenSize();
@@ -203,6 +218,7 @@ const Excellence: React.FC = () => {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
+  // Intersection observer for small screen horizontal scroll active card detection
   useEffect(() => {
     if (!isSmallScreen) return;
 
@@ -225,6 +241,7 @@ const Excellence: React.FC = () => {
     return () => observer.disconnect();
   }, [isSmallScreen]);
 
+  // Variants for large screen animations
   const largeScreenVariants: Variants = {
     offscreen: (index: number) => ({
       opacity: 0,
@@ -245,14 +262,15 @@ const Excellence: React.FC = () => {
     },
   };
 
+  // Variants for small screen (simple fade + scale)
   const smallScreenVariants: Variants = {
     offscreen: { opacity: 0.7, scale: 0.95 },
     onscreen: { opacity: 1, scale: 1, transition: { duration: 0.3 } },
   };
 
   return (
-    <section id="excellence" className="px-4 sm:px-8 lg:px-20 py-16 bg-white">
-      {/* Scrolling heading */}
+    <section className="px-4 sm:px-8 lg:px-20 py-16 bg-white">
+      {/* Scroll velocity heading OUTSIDE container for full viewport width */}
       <div
         style={{
           width: "100vw",
@@ -267,8 +285,8 @@ const Excellence: React.FC = () => {
             <span
               style={{
                 fontWeight: "900",
-                fontSize: "6rem",
-                color: "#121212",
+                fontSize: "8rem",
+                color: "#121212", // matte black
                 fontFamily: "'Montserrat', sans-serif",
                 letterSpacing: "-0.03em",
                 userSelect: "none",
@@ -282,25 +300,26 @@ const Excellence: React.FC = () => {
           numCopies={8}
           className="scrolling-heading-text"
           parallaxStyle={{ margin: 0 }}
+          scrollerStyle={{}}
           velocityInputRange={[0, 1200]}
           velocityOutputRange={[0, 6]}
         />
       </div>
 
+      {/* Container for the rest of the content */}
       <div className="container mx-auto max-w-4xl mt-12">
         <p className="text-base sm:text-lg lg:text-xl text-gray-700 max-w-3xl mx-auto mb-16">
           Experience the difference that premium technology and craftsmanship
           make.
         </p>
 
-        {/* Small screen horizontal scroll with fix */}
+        {/* Small screen: Horizontal scroll with snapping */}
         {isSmallScreen && (
           <div
             className="overflow-x-auto snap-x snap-mandatory -mx-4 px-4 pb-4"
             style={{
-              overscrollBehaviorX: "contain",
               WebkitOverflowScrolling: "touch",
-              touchAction: "pan-y",
+              touchAction: "pan-x",
             }}
           >
             <div className="flex gap-4">
@@ -317,26 +336,30 @@ const Excellence: React.FC = () => {
                     whileInView="onscreen"
                     viewport={{ once: false, amount: 0.6 }}
                     variants={smallScreenVariants}
-                    className={`bg-white w-[80vw] p-6 rounded-3xl transition-transform duration-300 transform snap-center flex-shrink-0
+                    className={`${feature.bgColor} w-[80vw] p-6 rounded-3xl transition-transform duration-300 transform snap-center flex-shrink-0
                       shadow-[0_8px_20px_rgba(0,0,0,0.3)]
-                      ${
-                        isActive
-                          ? "scale-105 shadow-[0_12px_30px_rgba(0,0,0,0.5)]"
-                          : ""
-                      }`}
+                      ${isActive ? "scale-105 shadow-[0_12px_30px_rgba(0,0,0,0.5)]" : ""}`}
                     onTouchStart={() => setActiveCard(index)}
                   >
                     <div
-                      className={`inline-flex p-3 rounded-2xl mb-5 transition-transform duration-300 bg-gradient-to-br ${feature.color} ${
+                      className={`inline-flex p-3 rounded-2xl bg-gradient-to-br ${feature.color} mb-5 transition-transform duration-300 ${
                         isActive ? "scale-110" : ""
                       }`}
                     >
                       <IconComponent className="w-7 h-7 text-white" />
                     </div>
-                    <h3 className="text-lg font-bold text-black mb-3">
+                    <h3
+                      className={`text-lg font-bold text-white mb-3 ${
+                        isActive ? "text-yellow-300" : ""
+                      }`}
+                    >
                       {feature.title}
                     </h3>
-                    <p className="text-sm text-gray-700">
+                    <p
+                      className={`text-sm text-gray-300 ${
+                        isActive ? "text-gray-100" : ""
+                      }`}
+                    >
                       {feature.description}
                     </p>
                     <div className="mt-5">
@@ -353,7 +376,7 @@ const Excellence: React.FC = () => {
           </div>
         )}
 
-        {/* Large screen vertical cards */}
+        {/* Large screen: vertical cards with slide animation */}
         {!isSmallScreen && (
           <div className="flex flex-col gap-8">
             {excellenceFeatures.map((feature, index) => {
@@ -368,28 +391,32 @@ const Excellence: React.FC = () => {
                   whileInView="onscreen"
                   viewport={{ once: false, amount: 0.3 }}
                   variants={largeScreenVariants}
-                  className={`bg-white w-full p-8 rounded-3xl transition-transform duration-300 transform
+                  className={`${feature.bgColor} w-full p-8 rounded-3xl transition-transform duration-300 transform
                     shadow-[0_8px_20px_rgba(0,0,0,0.3)]
-                    ${
-                      isActive
-                        ? "scale-105 shadow-[0_12px_30px_rgba(0,0,0,0.5)]"
-                        : ""
-                    }`}
+                    ${isActive ? "scale-105 shadow-[0_12px_30px_rgba(0,0,0,0.5)]" : ""}`}
                   onMouseEnter={() => setActiveCard(index)}
                   onMouseLeave={() => setActiveCard(null)}
                   onTouchStart={() => setActiveCard(index)}
                 >
                   <div
-                    className={`inline-flex p-4 rounded-2xl mb-6 transition-transform duration-300 bg-gradient-to-br ${feature.color} ${
+                    className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${feature.color} mb-6 transition-transform duration-300 ${
                       isActive ? "scale-110" : ""
                     }`}
                   >
                     <IconComponent className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-black mb-4">
+                  <h3
+                    className={`text-xl font-bold text-white mb-4 ${
+                      isActive ? "text-yellow-300" : ""
+                    }`}
+                  >
                     {feature.title}
                   </h3>
-                  <p className="text-gray-700 leading-relaxed">
+                  <p
+                    className={`text-gray-300 leading-relaxed ${
+                      isActive ? "text-gray-100" : ""
+                    }`}
+                  >
                     {feature.description}
                   </p>
                   <div className="mt-6">
