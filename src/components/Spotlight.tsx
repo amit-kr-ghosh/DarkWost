@@ -12,31 +12,32 @@ import LightRays from "../components/LightRays/LightRays";
 
 const styleIcons = [
   {
-    id: 1,
+    id: 2,
     name: "Chahat Gupta",
     role: "Actor / Model",
     description:
       "Bold choices for bold personalities. Chahat pushes boundaries in eyewear fashion.",
     image: "images/Chahat.jpg",
-    productName: "Wayfarer Sunglasses",
-    amazonUrl: "https://amzn.in/d/ibAURLl",
+      productName: "Rimless Sunglasses",
+    amazonUrl: "https://amzn.in/d/2fB1TUs",
     instagramId: "chahat_chunu",
     gradient: "from-pink-500 to-rose-500",
   },
   {
-    id: 2,
+    id: 3,
     name: "Joyous",
     role: "Marketing Expert",
     description:
       "Vibrant colors and playful designs that capture the joy of self-expression and confidence.",
     image: "/images/Dishad.jpg",
-    productName: "Rimless Sunglasses",
-    amazonUrl: "https://amzn.in/d/81vUleu",
+      productName: "Wayfarer Sunglasses",
+    amazonUrl: "https://amzn.in/d/iGQK2t1",
+
     instagramId: "joyous_ad",
     gradient: "from-blue-500 to-indigo-500",
   },
   {
-    id: 3,
+    id: 1,
     name: "Arushi Kanwar",
     role: "Athlete / Content Creator",
     description:
