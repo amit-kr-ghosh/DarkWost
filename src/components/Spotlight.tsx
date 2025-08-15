@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import {
   ExternalLink,
   Instagram,
-
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -18,7 +17,7 @@ const styleIcons = [
     description:
       "Bold choices for bold personalities. Chahat pushes boundaries in eyewear fashion.",
     image: "images/Chahat.jpg",
-      productName: "Rimless Sunglasses",
+    productName: "Retro Oval",
     amazonUrl: "https://amzn.in/d/2fB1TUs",
     instagramId: "chahat_chunu",
     gradient: "from-pink-500 to-rose-500",
@@ -30,7 +29,7 @@ const styleIcons = [
     description:
       "Vibrant colors and playful designs that capture the joy of self-expression and confidence.",
     image: "/images/Dishad.jpg",
-      productName: "Wayfarer Sunglasses",
+    productName: "Wayfarer Sunglasses",
     amazonUrl: "https://amzn.in/d/iGQK2t1",
 
     instagramId: "joyous_ad",
@@ -241,8 +240,6 @@ const Spotlight: React.FC = () => {
                             {icon.productName}
                           </p>
                         </div>
-
-        
                       </div>
 
                       <button
