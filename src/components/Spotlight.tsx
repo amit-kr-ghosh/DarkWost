@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import {
   ExternalLink,
   Instagram,
-  Star,
+
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -13,55 +13,39 @@ import LightRays from "../components/LightRays/LightRays";
 const styleIcons = [
   {
     id: 1,
-    name: "Sofia Chen",
-    role: "Fashion Stylist",
+    name: "Chahat Gupta",
+    role: "Actor / Model",
     description:
-      "Minimalist aesthetics meet maximum impact. Sofia's choices redefine modern elegance.",
-    image:
-      "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400",
-    productName: "Urban Minimalist",
-    amazonUrl: "https://amazon.com/dp/example6",
-    followers: "125K",
+      "Bold choices for bold personalities. Chahat pushes boundaries in eyewear fashion.",
+    image: "images/Chahat.jpg",
+    productName: "Wayfarer Sunglasses",
+    amazonUrl: "https://amzn.in/d/ibAURLl",
+    instagramId: "chahat_chunu",
     gradient: "from-pink-500 to-rose-500",
   },
   {
     id: 2,
-    name: "Marcus Rivera",
-    role: "Creative Director",
+    name: "Joyous",
+    role: "Marketing Expert",
     description:
-      "Bold choices for bold personalities. Marcus pushes boundaries in eyewear fashion.",
-    image:
-      "https://images.pexels.com/photos/1499327/pexels-photo-1499327.jpeg?auto=compress&cs=tinysrgb&w=400",
-    productName: "Midnight Aviator",
-    amazonUrl: "https://amazon.com/dp/example2",
-    followers: "89K",
+      "Vibrant colors and playful designs that capture the joy of self-expression and confidence.",
+    image: "/images/Dishad.jpg",
+    productName: "Rimless Sunglasses",
+    amazonUrl: "https://amzn.in/d/81vUleu",
+    instagramId: "joyous_ad",
     gradient: "from-blue-500 to-indigo-500",
   },
   {
     id: 3,
-    name: "Luna Martinez",
-    role: "Lifestyle Blogger",
+    name: "Arushi Kanwar",
+    role: "Athlete / Content Creator",
     description:
-      "Vibrant colors and playful designs that capture the joy of self-expression and confidence.",
-    image:
-      "https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=400",
-    productName: "Coral Reef",
-    amazonUrl: "https://amazon.com/dp/example3",
-    followers: "156K",
+      "Minimalist aesthetics meet maximum impact. Sofia's choices redefine modern elegance.",
+    image: "images/Arushi.jpg",
+    productName: "Cat's Eye",
+    amazonUrl: "https://amzn.in/d/0xME8Gz",
+    instagramId: "aarushikanwar11",
     gradient: "from-orange-500 to-pink-500",
-  },
-  {
-    id: 4,
-    name: "Alex Thompson",
-    role: "Tech Influencer",
-    description:
-      "Where technology meets style. Alex showcases the perfect blend of function and fashion.",
-    image:
-      "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=400",
-    productName: "Tech Master Pro",
-    amazonUrl: "https://amazon.com/dp/example4",
-    followers: "203K",
-    gradient: "from-purple-500 to-blue-500",
   },
 ];
 
@@ -130,7 +114,6 @@ const Spotlight: React.FC = () => {
       id="spotlight"
       className="relative px-6 md:px-20 py-20 bg-black select-none overflow-hidden"
     >
-      {/* Light rays background - disabled on small screens */}
       {!isSmallScreen && (
         <div className="absolute inset-0 z-0 pointer-events-none">
           <LightRays
@@ -148,7 +131,6 @@ const Spotlight: React.FC = () => {
         </div>
       )}
 
-      {/* Foreground content */}
       <div className="relative z-10 container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-5xl md:text-7xl font-bold text-white mb-4">
@@ -166,7 +148,6 @@ const Spotlight: React.FC = () => {
           className="relative"
         >
           <div className="relative flex items-center justify-center overflow-visible">
-            {/* Prev button */}
             <button
               onClick={prevSlide}
               aria-label="Previous"
@@ -181,7 +162,6 @@ const Spotlight: React.FC = () => {
               />
             </button>
 
-            {/* Carousel */}
             <motion.div
               ref={containerRef}
               drag="x"
@@ -221,20 +201,26 @@ const Spotlight: React.FC = () => {
                     onClick={() => setCurrentIndex(i)}
                     style={{ perspective: 1200, zIndex: style.zIndex }}
                   >
-                    <div className="relative overflow-hidden rounded-t-3xl h-64">
+                    {/* Image clickable to Instagram */}
+                    <a
+                      href={`https://instagram.com/${icon.instagramId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block relative overflow-hidden rounded-t-3xl h-64"
+                    >
                       <img
                         src={icon.image}
                         alt={icon.name}
                         className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                      <div className="absolute top-4 right-4 flex items-center space-x-1 bg-black/70 backdrop-blur-sm px-3 py-1 rounded-full">
+                      <div className="absolute top-4 right-4 flex items-center space-x-1 bg-black/70 backdrop-blur-sm px-3 py-1 rounded-full hover:bg-black/90 transition">
                         <Instagram className="w-4 h-4 text-pink-500" />
                         <span className="text-sm font-medium text-white">
-                          {icon.followers}
+                          @{icon.instagramId}
                         </span>
                       </div>
-                    </div>
+                    </a>
 
                     <div className="p-6 space-y-4">
                       <div>
@@ -254,10 +240,8 @@ const Spotlight: React.FC = () => {
                             {icon.productName}
                           </p>
                         </div>
-                        <div className="flex items-center space-x-1">
-                          <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                          <span className="text-sm text-white">5.0</span>
-                        </div>
+
+        
                       </div>
 
                       <button
@@ -273,7 +257,6 @@ const Spotlight: React.FC = () => {
               })}
             </motion.div>
 
-            {/* Next button */}
             <button
               onClick={nextSlide}
               aria-label="Next"
